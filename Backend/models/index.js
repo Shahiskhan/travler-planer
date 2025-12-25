@@ -14,6 +14,18 @@ const User = require("./User")(sequelize, DataTypes);
 User.hasMany(Location);
 Location.belongsTo(User);
 
+User.hasMany(Hotel);
+Hotel.belongsTo(User);
+
+User.hasMany(Flight);
+Flight.belongsTo(User);
+
+User.hasMany(Airline);
+Airline.belongsTo(User);
+
+User.hasMany(ViewPoint);
+ViewPoint.belongsTo(User);
+
 Location.hasMany(ViewPoint);
 ViewPoint.belongsTo(Location);
 

@@ -8,6 +8,8 @@ import Locations from './pages/Locations';
 import Hotels from './pages/Hotels';
 import Flights from './pages/Flights';
 import ViewPoints from './pages/ViewPoints';
+import Airlines from './pages/Airlines';
+import Home from './pages/Home';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -25,33 +27,7 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={
-            <div className="text-center mt-8" style={{ padding: '4rem 1rem' }}>
-              <h1 style={{
-                fontSize: '3.5rem',
-                fontWeight: 'bold',
-                marginBottom: '1.5rem',
-                background: 'linear-gradient(to right, #60a5fa, #c084fc, #f472b6)',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent'
-              }}>
-                Explore the World
-              </h1>
-              <p style={{
-                fontSize: '1.25rem',
-                color: 'var(--text-secondary)',
-                maxWidth: '700px',
-                margin: '0 auto 3rem',
-                lineHeight: '1.6'
-              }}>
-                Discover breath-taking locations, book luxury hotels, and find the best flights. Your next adventure starts here.
-              </p>
-              <div className="flex-center" style={{ gap: '1.5rem' }}>
-                <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>Start Exploring</button>
-                <button className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>View Deals</button>
-              </div>
-            </div>
-          } />
+          <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 
@@ -59,6 +35,7 @@ function App() {
           <Route path="hotels" element={<Hotels />} />
           <Route path="flights" element={<Flights />} />
           <Route path="viewpoints" element={<ViewPoints />} />
+          <Route path="airlines" element={<Airlines />} />
         </Route>
       </Routes>
     </AuthProvider>

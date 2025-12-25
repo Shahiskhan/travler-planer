@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./models");
 require('dotenv').config();
+const seedAdmin = require("./seedAdmin");
 
 const authRoutes = require("./routes/auth.routes");
 const apiRoutes = require("./routes/api.routes");
@@ -32,8 +33,9 @@ app.use((err, req, res, next) => {
 
 // Sync DB & Start Server
 // Use { alter: true } only during development to update tables
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ alter: true }).then(async () => {
     console.log("Database connected and synced.");
+    await seedAdmin();
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
     });

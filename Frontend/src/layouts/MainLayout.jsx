@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Plane, Hotel, MapPin, User, LogOut, Mountain } from 'lucide-react';
+import { Plane, Hotel, MapPin, User, LogOut, Mountain, Shield } from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -13,6 +13,7 @@ const Navbar = () => {
         { name: 'Locations', path: '/locations', icon: <MapPin size={18} /> },
         { name: 'Hotels', path: '/hotels', icon: <Hotel size={18} /> },
         { name: 'Flights', path: '/flights', icon: <Plane size={18} /> },
+        { name: 'Airlines', path: '/airlines', icon: <Shield size={18} /> },
         { name: 'ViewPoints', path: '/viewpoints', icon: <Mountain size={18} /> },
     ];
 
