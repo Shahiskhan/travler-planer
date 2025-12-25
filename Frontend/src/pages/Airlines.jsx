@@ -95,13 +95,13 @@ const Airlines = () => {
         }
     };
 
-    if (loading && airlines.length === 0) return <div className="text-center mt-8">Loading partner airlines...</div>;
+    if (loading && airlines.length === 0) return <div className="text-center mt-8 text-text-secondary">Loading partner airlines...</div>;
 
     return (
-        <div className="container">
-            <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0 }}>Our Airline Partners</h2>
-                <div className="flex-center" style={{ gap: '1rem' }}>
+        <div className="container mx-auto py-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <h2 className="text-4xl font-bold text-white">Our Airline Partners</h2>
+                <div className="flex items-center gap-4">
                     {isMiniAdmin && (
                         <button
                             onClick={() => setShowOnlyMine(!showOnlyMine)}
@@ -111,7 +111,7 @@ const Airlines = () => {
                         </button>
                     )}
                     {isAnyAdmin && (
-                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex-center" style={{ gap: '0.5rem' }}>
+                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex items-center gap-2">
                             <Plus size={20} /> Add Airline
                         </button>
                     )}
@@ -120,27 +120,41 @@ const Airlines = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {airlines.map((airline) => (
-                    <div key={airline.id} className="glass-panel airline-card text-center animate-fade-in">
-                        <div className="airline-logo-wrapper">
+                    <div key={airline.id} className="glass-panel relative p-8 text-center hover:-translate-y-2 hover:border-primary transition-all duration-300">
+                        <div className="w-20 h-20 mx-auto mb-6 bg-white/5 rounded-2xl flex items-center justify-center overflow-hidden border border-white/10">
                             {airline.logo ? (
-                                <img src={airline.logo} alt={airline.name} className="airline-logo" />
+                                <img src={airline.logo} alt={airline.name} className="w-full h-full object-contain p-2" />
                             ) : (
-                                <Plane size={40} className="text-secondary" />
+                                <Plane size={32} className="text-text-secondary" />
                             )}
                         </div>
-                        <h3 className="airline-name">{airline.name}</h3>
-                        <div className="airline-code">{airline.code}</div>
-                        <p className="airline-country"><Shield size={14} /> {airline.country || 'International'}</p>
+                        <h3 className="text-xl font-bold text-white mb-2">{airline.name}</h3>
+                        <div className="text-sm font-bold text-primary tracking-widest mb-3">{airline.code}</div>
+                        <p className="flex items-center justify-center gap-2 text-sm text-text-secondary mb-6">
+                            <Shield size={14} /> {airline.country || 'International'}
+                        </p>
 
-                        <div className="airline-links">
-                            {airline.website && <a href={airline.website} target="_blank" rel="noreferrer" title="Website"><Globe size={18} /></a>}
-                            {airline.contactEmail && <a href={`mailto:${airline.contactEmail}`} title="Email"><Mail size={18} /></a>}
+                        <div className="flex items-center justify-center gap-4">
+                            {airline.website && (
+                                <a href={airline.website} target="_blank" rel="noreferrer" className="text-text-secondary hover:text-primary transition-colors" title="Website">
+                                    <Globe size={18} />
+                                </a>
+                            )}
+                            {airline.contactEmail && (
+                                <a href={`mailto:${airline.contactEmail}`} className="text-text-secondary hover:text-primary transition-colors" title="Email">
+                                    <Mail size={18} />
+                                </a>
+                            )}
                         </div>
 
                         {(isSuperAdmin || (isMiniAdmin && airline.UserId === user.id)) && (
-                            <div className="admin-actions">
-                                <button onClick={() => handleOpenModal(airline)} className="icon-btn edit" title="Edit your work"><Edit2 size={14} /></button>
-                                <button onClick={() => handleDelete(airline.id)} className="icon-btn delete" title="Delete your work"><Trash2 size={16} /></button>
+                            <div className="absolute top-4 right-4 flex flex-col gap-2">
+                                <button onClick={() => handleOpenModal(airline)} className="p-1.5 rounded-lg border border-white/10 text-text-secondary hover:bg-white/5 hover:text-primary transition-colors" title="Edit">
+                                    <Edit2 size={14} />
+                                </button>
+                                <button onClick={() => handleDelete(airline.id)} className="p-1.5 rounded-lg border border-white/10 text-text-secondary hover:bg-white/5 hover:text-red-500 transition-colors" title="Delete">
+                                    <Trash2 size={14} />
+                                </button>
                             </div>
                         )}
                     </div>
@@ -148,8 +162,8 @@ const Airlines = () => {
             </div>
 
             {airlines.length === 0 && !loading && (
-                <div className="glass-panel empty-state">
-                    <p>No airlines listed yet.</p>
+                <div className="glass-panel p-16 text-center text-text-secondary">
+                    <p className="text-xl">No airlines listed yet.</p>
                 </div>
             )}
 
@@ -158,9 +172,9 @@ const Airlines = () => {
                 onClose={() => setIsModalOpen(false)}
                 title={editingAirline ? 'Edit Airline' : 'Add New Airline'}
             >
-                <form onSubmit={handleSubmit} className="form-grid">
-                    <div className="form-group full-width">
-                        <label>Airline Name</label>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">Airline Name</label>
                         <input
                             type="text"
                             required
@@ -169,8 +183,8 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Airline Code (e.g. PK, EK)</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Airline Code (e.g. PK, EK)</label>
                         <input
                             type="text"
                             required
@@ -179,8 +193,8 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Country</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Country</label>
                         <input
                             type="text"
                             className="input"
@@ -188,8 +202,8 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Logo URL</label>
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">Logo URL</label>
                         <input
                             type="text"
                             className="input"
@@ -197,8 +211,8 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Website</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Website</label>
                         <input
                             type="text"
                             className="input"
@@ -206,8 +220,8 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Contact Email</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Contact Email</label>
                         <input
                             type="email"
                             className="input"
@@ -215,7 +229,7 @@ const Airlines = () => {
                             onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                         />
                     </div>
-                    <div className="form-actions full-width">
+                    <div className="md:col-span-2 flex justify-end gap-3 mt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-outline">Cancel</button>
                         <button type="submit" className="btn btn-primary">
                             {editingAirline ? 'Update Airline' : 'Create Airline'}
@@ -223,71 +237,6 @@ const Airlines = () => {
                     </div>
                 </form>
             </Modal>
-
-            <style jsx>{`
-                .container { padding: 2rem 0; }
-                
-                .airline-card {
-                    padding: 2.5rem 1.5rem;
-                    position: relative;
-                    transition: all 0.3s;
-                }
-                .airline-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-
-                .airline-logo-wrapper {
-                    width: 70px;
-                    height: 70px;
-                    margin: 0 auto 1.5rem;
-                    background: rgba(255,255,255,0.05);
-                    border-radius: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                }
-                .airline-logo { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
-
-                .airline-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-                .airline-code { font-size: 0.8rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; margin-bottom: 0.5rem; }
-                .airline-country { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
-
-                .airline-links {
-                    margin-top: 1.5rem;
-                    display: flex;
-                    justify-content: center;
-                    gap: 1.5rem;
-                }
-                .airline-links a { color: var(--text-secondary); transition: color 0.3s; }
-                .airline-links a:hover { color: var(--primary); }
-
-                .admin-actions {
-                    position: absolute;
-                    top: 1rem;
-                    right: 1rem;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-                .icon-btn {
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 8px;
-                    border: 1px solid var(--glass-border);
-                    background: transparent;
-                    color: var(--text-secondary);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                .icon-btn:hover { color: white; background: var(--primary); border-color: var(--primary); }
-                .icon-btn.delete:hover { background: var(--danger); border-color: var(--danger); }
-
-                .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-                .full-width { grid-column: span 2; }
-                .empty-state { padding: 4rem; text-align: center; color: var(--text-secondary); }
-            `}</style>
         </div>
     );
 };

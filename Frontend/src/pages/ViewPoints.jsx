@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { viewpointService } from '../services/resourceService';
 import { useAuth } from '../context/AuthContext';
-import { Camera, Clock, Info, Plus, Edit2, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Clock, Info, Plus, Edit2, Trash2, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import Modal from '../components/Modal';
 
@@ -92,13 +92,13 @@ const ViewPoints = () => {
         }
     };
 
-    if (loading && viewpoints.length === 0) return <div className="text-center mt-8">Discovering best viewpoints...</div>;
+    if (loading && viewpoints.length === 0) return <div className="text-center mt-8 text-text-secondary">Discovering best viewpoints...</div>;
 
     return (
-        <div className="container">
-            <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0 }}>Tourist Attractions</h2>
-                <div className="flex-center" style={{ gap: '1rem' }}>
+        <div className="container mx-auto py-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <h2 className="text-4xl font-bold text-white">Tourist Attractions</h2>
+                <div className="flex items-center gap-4">
                     {isMiniAdmin && (
                         <button
                             onClick={() => setShowOnlyMine(!showOnlyMine)}
@@ -108,7 +108,7 @@ const ViewPoints = () => {
                         </button>
                     )}
                     {isAnyAdmin && (
-                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex-center" style={{ gap: '0.5rem' }}>
+                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex items-center gap-2">
                             <Plus size={20} /> Add ViewPoint
                         </button>
                     )}
@@ -117,30 +117,38 @@ const ViewPoints = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {viewpoints.map((vp) => (
-                    <div key={vp.id} className="glass-panel card vp-card" style={{ padding: 0 }}>
-                        <div className="card-image-wrapper">
+                    <div key={vp.id} className="glass-panel overflow-hidden hover:-translate-y-2 transition-transform duration-300">
+                        <div className="relative h-56 bg-card">
                             {vp.bannerImage ? (
-                                <img src={vp.bannerImage} alt={vp.name} className="card-img" />
+                                <img src={vp.bannerImage} alt={vp.name} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="flex-center placeholder-img">
+                                <div className="flex items-center justify-center h-full text-text-secondary">
                                     <ImageIcon size={48} />
                                 </div>
                             )}
-                            <div className="fee-tag">{vp.entryFee > 0 ? `Rs. ${vp.entryFee}` : 'Free Entry'}</div>
+                            <div className="absolute top-4 right-4 bg-card/60 backdrop-blur-md text-white px-3 py-1 rounded-lg font-bold text-sm border border-white/10">
+                                {vp.entryFee > 0 ? `Rs. ${vp.entryFee}` : 'Free Entry'}
+                            </div>
                             {(isSuperAdmin || (isMiniAdmin && vp.UserId === user.id)) && (
-                                <div className="admin-actions">
-                                    <button onClick={() => handleOpenModal(vp)} className="action-btn edit" title="Edit your work"><Edit2 size={16} /></button>
-                                    <button onClick={() => handleDelete(vp.id)} className="action-btn delete" title="Delete your work"><Trash2 size={16} /></button>
+                                <div className="absolute bottom-4 right-4 flex gap-2">
+                                    <button onClick={() => handleOpenModal(vp)} className="p-2 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-primary transition-colors" title="Edit">
+                                        <Edit2 size={16} />
+                                    </button>
+                                    <button onClick={() => handleDelete(vp.id)} className="p-2 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-red-500 transition-colors" title="Delete">
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
                             )}
                         </div>
-                        <div className="card-body">
-                            <h3 className="card-title">{vp.name}</h3>
-                            <div className="flex-center opening-hours">
+                        <div className="p-6">
+                            <h3 className="text-xl font-bold text-white mb-2">{vp.name}</h3>
+                            <div className="flex items-center gap-2 text-sm text-primary mb-4">
                                 <Clock size={14} /> {vp.openingHours || 'Open 24/7'}
                             </div>
-                            <p className="card-desc">{vp.description}</p>
-                            <button className="btn btn-outline btn-sm full-width flex-center" style={{ gap: '0.5rem' }}>
+                            <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                                {vp.description}
+                            </p>
+                            <button className="btn btn-outline w-full text-sm py-2 flex items-center justify-center gap-2">
                                 <Info size={16} /> View Gallery
                             </button>
                         </div>
@@ -149,8 +157,8 @@ const ViewPoints = () => {
             </div>
 
             {viewpoints.length === 0 && !loading && (
-                <div className="glass-panel empty-state">
-                    <p>No viewpoints discovered yet. Be the first to add one!</p>
+                <div className="glass-panel p-16 text-center text-text-secondary">
+                    <p className="text-xl">No viewpoints discovered yet. Be the first to add one!</p>
                 </div>
             )}
 
@@ -159,9 +167,9 @@ const ViewPoints = () => {
                 onClose={() => setIsModalOpen(false)}
                 title={editingVP ? 'Edit ViewPoint' : 'Add New ViewPoint'}
             >
-                <form onSubmit={handleSubmit} className="form-grid">
-                    <div className="form-group full-width">
-                        <label>ViewPoint Name</label>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">ViewPoint Name</label>
                         <input
                             type="text"
                             required
@@ -170,8 +178,8 @@ const ViewPoints = () => {
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Banner Image URL</label>
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">Banner Image URL</label>
                         <input
                             type="text"
                             className="input"
@@ -179,8 +187,8 @@ const ViewPoints = () => {
                             onChange={(e) => setFormData({ ...formData, bannerImage: e.target.value })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Description</label>
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">Description</label>
                         <textarea
                             rows="4"
                             className="input"
@@ -188,8 +196,8 @@ const ViewPoints = () => {
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         ></textarea>
                     </div>
-                    <div className="form-group">
-                        <label>Opening Hours</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Opening Hours</label>
                         <input
                             type="text"
                             className="input"
@@ -198,8 +206,8 @@ const ViewPoints = () => {
                             onChange={(e) => setFormData({ ...formData, openingHours: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Entry Fee (PKR)</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Entry Fee (PKR)</label>
                         <input
                             type="number"
                             className="input"
@@ -207,7 +215,7 @@ const ViewPoints = () => {
                             onChange={(e) => setFormData({ ...formData, entryFee: parseInt(e.target.value) })}
                         />
                     </div>
-                    <div className="form-actions full-width">
+                    <div className="md:col-span-2 flex justify-end gap-3 mt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-outline">Cancel</button>
                         <button type="submit" className="btn btn-primary">
                             {editingVP ? 'Update ViewPoint' : 'Create ViewPoint'}
@@ -215,77 +223,6 @@ const ViewPoints = () => {
                     </div>
                 </form>
             </Modal>
-
-            <style jsx>{`
-                .container { padding: 2rem 0; }
-                .vp-card { overflow: hidden; transition: transform 0.3s ease; }
-                .vp-card:hover { transform: translateY(-5px); }
-
-                .card-image-wrapper { height: 220px; position: relative; background: #1e293b; }
-                .card-img { width: 100%; height: 100%; object-fit: cover; }
-                .placeholder-img { height: 100%; color: var(--text-secondary); }
-
-                .fee-tag {
-                    position: absolute;
-                    top: 1rem;
-                    right: 1rem;
-                    background: var(--bg-card);
-                    color: var(--accent);
-                    padding: 0.3rem 0.8rem;
-                    border-radius: 0.5rem;
-                    font-weight: 700;
-                    font-size: 0.8rem;
-                    border: 1px solid var(--glass-border);
-                    backdrop-filter: blur(8px);
-                }
-
-                .admin-actions {
-                    position: absolute;
-                    bottom: 1rem;
-                    right: 1rem;
-                    display: flex;
-                    gap: 0.5rem;
-                }
-
-                .action-btn {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 8px;
-                    border: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    background: rgba(15, 23, 42, 0.7);
-                    color: white;
-                    backdrop-filter: blur(4px);
-                }
-                .action-btn:hover { background: var(--primary); }
-
-                .card-body { padding: 1.5rem; }
-                .card-title { margin: 0 0 0.5rem 0; font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
-                
-                .opening-hours { justify-content: flex-start; gap: 0.5rem; font-size: 0.85rem; color: var(--accent); margin-bottom: 1rem; }
-                
-                .card-desc {
-                    color: var(--text-secondary);
-                    font-size: 0.95rem;
-                    line-height: 1.6;
-                    margin-bottom: 1.5rem;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-
-                .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-                .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-                .full-width { grid-column: span 2; }
-                .form-group label { font-size: 0.85rem; color: var(--text-secondary); }
-                .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
-                
-                .empty-state { padding: 4rem; text-align: center; color: var(--text-secondary); }
-            `}</style>
         </div>
     );
 };

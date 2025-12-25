@@ -23,19 +23,18 @@ const Register = () => {
     };
 
     return (
-        <div className="flex-center" style={{ minHeight: '80vh', padding: '2rem 0' }}>
-            <div className="glass-panel card" style={{ maxWidth: '500px', width: '100%', padding: '2rem' }}>
-                <h2 className="text-center" style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>Create Account</h2>
+        <div className="flex items-center justify-center min-h-[80vh] py-10">
+            <div className="glass-panel w-full max-w-lg p-8">
+                <h2 className="text-center text-3xl font-bold mb-8">Create Account</h2>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label className="form-label">Full Name</label>
-                        <div style={{ position: 'relative' }}>
-                            <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium ml-1">Full Name</label>
+                        <div className="relative">
+                            <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" />
                             <input
                                 type="text"
-                                className="form-input"
-                                style={{ paddingLeft: '3rem' }}
+                                className="input pl-12"
                                 placeholder="John Doe"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -44,14 +43,13 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Email Address</label>
-                        <div style={{ position: 'relative' }}>
-                            <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium ml-1">Email Address</label>
+                        <div className="relative">
+                            <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" />
                             <input
                                 type="email"
-                                className="form-input"
-                                style={{ paddingLeft: '3rem' }}
+                                className="input pl-12"
                                 placeholder="john@example.com"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -60,14 +58,13 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Phone Number</label>
-                        <div style={{ position: 'relative' }}>
-                            <Phone size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium ml-1">Phone Number</label>
+                        <div className="relative">
+                            <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" />
                             <input
                                 type="text"
-                                className="form-input"
-                                style={{ paddingLeft: '3rem' }}
+                                className="input pl-12"
                                 placeholder="03001234567"
                                 value={formData.phone}
                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -75,14 +72,13 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <div style={{ position: 'relative' }}>
-                            <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium ml-1">Password</label>
+                        <div className="relative">
+                            <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" />
                             <input
                                 type="password"
-                                className="form-input"
-                                style={{ paddingLeft: '3rem' }}
+                                className="input pl-12"
                                 placeholder="••••••••"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -91,98 +87,48 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Account Type</label>
-                        <div className="role-selection">
-                            <label className={`role-card ${formData.role === 'USER' ? 'active' : ''}`}>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium ml-1">Account Type</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                            <label className={`cursor-pointer border border-glass-border p-4 rounded-xl transition-all hover:bg-primary/5 hover:border-primary/50 relative flex items-start gap-3 ${formData.role === 'USER' ? 'border-primary bg-primary/10 ring-1 ring-primary' : 'bg-white/5'}`}>
                                 <input
                                     type="radio"
                                     name="role"
                                     value="USER"
                                     checked={formData.role === 'USER'}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                    className="mt-1"
                                 />
-                                <div className="role-info">
-                                    <span className="role-title">Traveler</span>
-                                    <span className="role-desc">Explore destinations & book services</span>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-sm">Traveler</span>
+                                    <span className="text-xs text-text-secondary mt-1">Explore destinations & book services</span>
                                 </div>
                             </label>
 
-                            <label className={`role-card ${formData.role === 'MINI_ADMIN' ? 'active' : ''}`}>
+                            <label className={`cursor-pointer border border-glass-border p-4 rounded-xl transition-all hover:bg-primary/5 hover:border-primary/50 relative flex items-start gap-3 ${formData.role === 'MINI_ADMIN' ? 'border-primary bg-primary/10 ring-1 ring-primary' : 'bg-white/5'}`}>
                                 <input
                                     type="radio"
                                     name="role"
                                     value="MINI_ADMIN"
                                     checked={formData.role === 'MINI_ADMIN'}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                    className="mt-1"
                                 />
-                                <div className="role-info">
-                                    <span className="role-title">Travel Services Partner</span>
-                                    <span className="role-desc">Manage hotels, flights & attractions</span>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-sm">Travel Services Partner</span>
+                                    <span className="text-xs text-text-secondary mt-1">Manage hotels, flights & attractions</span>
                                 </div>
                             </label>
                         </div>
                     </div>
 
-                    <style jsx>{`
-                        .role-selection {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 1rem;
-                            margin-top: 0.5rem;
-                        }
-                        .role-card {
-                            border: 1px solid var(--glass-border);
-                            padding: 1rem;
-                            border-radius: 12px;
-                            cursor: pointer;
-                            transition: all 0.3s;
-                            background: rgba(255, 255, 255, 0.02);
-                            display: flex;
-                            align-items: flex-start;
-                            gap: 0.75rem;
-                        }
-                        .role-card:hover {
-                            border-color: var(--primary);
-                            background: rgba(59, 130, 246, 0.05);
-                        }
-                        .role-card.active {
-                            border-color: var(--primary);
-                            background: rgba(59, 130, 246, 0.1);
-                            box-shadow: 0 0 0 1px var(--primary);
-                        }
-                        .role-card input {
-                            margin-top: 0.25rem;
-                        }
-                        .role-info {
-                            display: flex;
-                            flex-direction: column;
-                        }
-                        .role-title {
-                            font-weight: 700;
-                            font-size: 0.95rem;
-                            color: var(--text-primary);
-                        }
-                        .role-desc {
-                            font-size: 0.75rem;
-                            color: var(--text-secondary);
-                            line-height: 1.3;
-                            margin-top: 0.2rem;
-                        }
-                        @media (max-width: 480px) {
-                            .role-selection {
-                                grid-template-columns: 1fr;
-                            }
-                        }
-                    `}</style>
-
-                    <button type="submit" className="btn btn-primary w-full" style={{ marginTop: '1rem' }}>
+                    <button type="submit" className="btn btn-primary w-full mt-4">
                         Get Started
                     </button>
                 </form>
 
-                <p className="text-center" style={{ marginTop: '1.5rem', color: 'var(--text-secondary)' }}>
-                    Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: '600' }}>Login</Link>
+                <p className="text-center mt-6 text-text-secondary">
+                    Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Login</Link>
                 </p>
             </div>
         </div>

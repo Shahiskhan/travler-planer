@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { flightService, airlineService } from '../services/resourceService';
 import { useAuth } from '../context/AuthContext';
-import { Plane, Calendar, Clock, MapPin, Plus, Edit2, Trash2, ArrowRight } from 'lucide-react';
+import { Plane, Plus, Edit2, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import Modal from '../components/Modal';
 
@@ -122,13 +122,22 @@ const Flights = () => {
         });
     };
 
-    if (loading && flights.length === 0) return <div className="text-center mt-8">Checking flight schedules...</div>;
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'ON_TIME': return 'bg-green-500/10 text-green-500';
+            case 'DELAYED': return 'bg-yellow-500/10 text-yellow-500';
+            case 'CANCELLED': return 'bg-red-500/10 text-red-500';
+            default: return 'bg-blue-500/10 text-blue-500';
+        }
+    };
+
+    if (loading && flights.length === 0) return <div className="text-center mt-8 text-text-secondary">Checking flight schedules...</div>;
 
     return (
-        <div className="container">
-            <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0 }}>Available Flights</h2>
-                <div className="flex-center" style={{ gap: '1rem' }}>
+        <div className="container mx-auto py-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <h2 className="text-4xl font-bold text-white">Available Flights</h2>
+                <div className="flex items-center gap-4">
                     {isMiniAdmin && (
                         <button
                             onClick={() => setShowOnlyMine(!showOnlyMine)}
@@ -138,52 +147,62 @@ const Flights = () => {
                         </button>
                     )}
                     {isAnyAdmin && (
-                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex-center" style={{ gap: '0.5rem' }}>
+                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex items-center gap-2">
                             <Plus size={20} /> Add Flight
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="flights-list">
+            <div className="flex flex-col gap-6">
                 {flights.map((flight) => (
-                    <div key={flight.id} className="glass-panel flight-card animate-slide-in">
-                        <div className="flight-main">
-                            <div className="airline-info">
-                                <div className="airline-icon"><Plane size={24} /></div>
+                    <div key={flight.id} className="glass-panel p-8 hover:border-primary transition-all duration-300 border border-white/10 animate-slide-up">
+                        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_200px] gap-8 items-center text-center lg:text-left">
+                            <div className="flex flex-col lg:flex-row gap-4 items-center justify-center lg:justify-start">
+                                <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                    <Plane size={24} />
+                                </div>
                                 <div>
-                                    <div className="flight-num">{flight.flightNumber}</div>
-                                    <div className="status-badge" data-status={flight.status}>{flight.status}</div>
-                                </div>
-                            </div>
-
-                            <div className="route-info">
-                                <div className="route-point">
-                                    <span className="city">{flight.fromCity}</span>
-                                    <span className="time">{formatDate(flight.departureTime)}</span>
-                                </div>
-                                <div className="route-connector">
-                                    <div className="duration">{flight.duration}</div>
-                                    <div className="line">
-                                        <div className="dot"></div>
-                                        <Plane size={16} className="plane-icon" />
-                                        <div className="dot"></div>
+                                    <div className="text-xl font-bold text-white">{flight.flightNumber}</div>
+                                    <div className={`text-xs font-bold uppercase px-2.5 py-1 rounded-md mt-1 inline-block ${getStatusColor(flight.status)}`}>
+                                        {flight.status.replace('_', ' ')}
                                     </div>
-                                    <div className="class-badge">{flight.class}</div>
-                                </div>
-                                <div className="route-point text-right">
-                                    <span className="city">{flight.toCity}</span>
-                                    <span className="time">{formatDate(flight.arrivalTime)}</span>
                                 </div>
                             </div>
 
-                            <div className="flight-sidebar">
-                                <div className="price">Rs. {flight.price.toLocaleString()}</div>
-                                <button className="btn btn-primary btn-sm">Book Now</button>
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-6 px-0 lg:px-8">
+                                <div className="flex flex-col min-w-[150px] text-center md:text-left">
+                                    <span className="text-2xl font-bold text-white">{flight.fromCity}</span>
+                                    <span className="text-sm text-text-secondary mt-1">{formatDate(flight.departureTime)}</span>
+                                </div>
+                                <div className="flex-1 w-full flex flex-col items-center px-4 relative">
+                                    <div className="text-xs text-text-secondary mb-2">{flight.duration}</div>
+                                    <div className="w-full h-0.5 bg-white/10 flex items-center justify-between relative">
+                                        <div className="w-1.5 h-1.5 bg-text-secondary rounded-full"></div>
+                                        <Plane size={16} className="text-primary bg-card px-1 z-10" />
+                                        <div className="w-1.5 h-1.5 bg-text-secondary rounded-full"></div>
+                                    </div>
+                                    <div className="mt-2 bg-white/5 px-3 py-1 rounded-full text-xs text-text-secondary">
+                                        {flight.class}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col min-w-[150px] text-center md:text-right">
+                                    <span className="text-2xl font-bold text-white">{flight.toCity}</span>
+                                    <span className="text-sm text-text-secondary mt-1">{formatDate(flight.arrivalTime)}</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col items-center lg:items-end gap-4 lg:border-l border-white/10 lg:pl-8">
+                                <div className="text-2xl font-bold text-primary">Rs. {flight.price.toLocaleString()}</div>
+                                <button className="btn btn-primary w-full lg:w-auto text-sm py-2">Book Now</button>
                                 {(isSuperAdmin || (isMiniAdmin && flight.UserId === user.id)) && (
-                                    <div className="admin-btns">
-                                        <button onClick={() => handleOpenModal(flight)} className="icon-btn edit" title="Edit your work"><Edit2 size={16} /></button>
-                                        <button onClick={() => handleDelete(flight.id)} className="icon-btn delete" title="Delete your work"><Trash2 size={16} /></button>
+                                    <div className="flex gap-2 justify-end mt-2">
+                                        <button onClick={() => handleOpenModal(flight)} className="p-2 rounded-lg border border-white/10 text-text-secondary hover:bg-white/5 hover:text-primary transition-colors" title="Edit">
+                                            <Edit2 size={16} />
+                                        </button>
+                                        <button onClick={() => handleDelete(flight.id)} className="p-2 rounded-lg border border-white/10 text-text-secondary hover:bg-white/5 hover:text-red-500 transition-colors" title="Delete">
+                                            <Trash2 size={16} />
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -193,8 +212,8 @@ const Flights = () => {
             </div>
 
             {flights.length === 0 && !loading && (
-                <div className="glass-panel empty-state">
-                    <p>No flights scheduled at the moment.</p>
+                <div className="glass-panel p-16 text-center text-text-secondary">
+                    <p className="text-xl">No flights scheduled at the moment.</p>
                 </div>
             )}
 
@@ -203,9 +222,9 @@ const Flights = () => {
                 onClose={() => setIsModalOpen(false)}
                 title={editingFlight ? 'Edit Flight' : 'Add New Flight'}
             >
-                <form onSubmit={handleSubmit} className="form-grid">
-                    <div className="form-group">
-                        <label>Flight Number</label>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Flight Number</label>
                         <input
                             type="text"
                             required
@@ -215,8 +234,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Class</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Class</label>
                         <select
                             className="input"
                             value={formData.class}
@@ -227,8 +246,8 @@ const Flights = () => {
                             <option value="FIRST">First Class</option>
                         </select>
                     </div>
-                    <div className="form-group">
-                        <label>From City</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">From City</label>
                         <input
                             type="text"
                             required
@@ -237,8 +256,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, fromCity: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>To City</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">To City</label>
                         <input
                             type="text"
                             required
@@ -247,8 +266,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, toCity: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Departure Time</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Departure Time</label>
                         <input
                             type="datetime-local"
                             required
@@ -257,8 +276,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, departureTime: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Arrival Time</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Arrival Time</label>
                         <input
                             type="datetime-local"
                             required
@@ -267,8 +286,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, arrivalTime: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Duration (e.g. 2h 30m)</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Duration (e.g. 2h 30m)</label>
                         <input
                             type="text"
                             className="input"
@@ -276,8 +295,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Price (PKR)</label>
+                    <div className="space-y-1.5">
+                        <label className="text-sm text-text-secondary">Price (PKR)</label>
                         <input
                             type="number"
                             required
@@ -286,8 +305,8 @@ const Flights = () => {
                             onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Status</label>
+                    <div className="space-y-1.5 md:col-span-2">
+                        <label className="text-sm text-text-secondary">Status</label>
                         <select
                             className="input"
                             value={formData.status}
@@ -299,7 +318,7 @@ const Flights = () => {
                             <option value="CANCELLED">Cancelled</option>
                         </select>
                     </div>
-                    <div className="form-actions full-width">
+                    <div className="md:col-span-2 flex justify-end gap-3 mt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-outline">Cancel</button>
                         <button type="submit" className="btn btn-primary">
                             {editingFlight ? 'Update Flight' : 'Create Flight'}
@@ -307,127 +326,6 @@ const Flights = () => {
                     </div>
                 </form>
             </Modal>
-
-            <style jsx>{`
-                .container { padding: 2rem 0; }
-                .flights-list { display: flex; flex-direction: column; gap: 1.5rem; }
-                
-                .flight-card {
-                    padding: 2rem;
-                    transition: transform 0.3s ease, border-color 0.3s;
-                    border: 1px solid var(--glass-border);
-                }
-                .flight-card:hover { border-color: var(--primary); transform: translateX(5px); }
-
-                .flight-main {
-                    display: grid;
-                    grid-template-columns: 200px 1fr 200px;
-                    align-items: center;
-                    gap: 3rem;
-                }
-
-                .airline-info { display: flex; gap: 1rem; align-items: center; }
-                .airline-icon {
-                    width: 48px;
-                    height: 48px;
-                    background: rgba(96, 165, 250, 0.1);
-                    color: var(--primary);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .flight-num { font-weight: 700; font-size: 1.1rem; }
-                .status-badge {
-                    font-size: 0.7rem;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    padding: 0.2rem 0.6rem;
-                    border-radius: 4px;
-                    margin-top: 0.25rem;
-                    display: inline-block;
-                }
-                .status-badge[data-status="SCHEDULED"] { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-                .status-badge[data-status="ON_TIME"] { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
-                .status-badge[data-status="DELAYED"] { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-                .status-badge[data-status="CANCELLED"] { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-
-                .route-info {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-                .route-point { display: flex; flex-direction: column; min-width: 150px; }
-                .city { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
-                .time { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; }
-
-                .route-connector {
-                    flex: 1;
-                    padding: 0 2rem;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    position: relative;
-                }
-                .duration { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-                .line {
-                    width: 100%;
-                    height: 2px;
-                    background: var(--glass-border);
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    position: relative;
-                }
-                .dot { width: 6px; height: 6px; background: var(--text-secondary); border-radius: 50%; }
-                .plane-icon { color: var(--primary); background: var(--bg-card); padding: 0 10px; z-index: 1; }
-                .class-badge {
-                    margin-top: 0.5rem;
-                    font-size: 0.75rem;
-                    background: rgba(255,255,255,0.05);
-                    padding: 0.2rem 0.8rem;
-                    border-radius: 1rem;
-                    color: var(--text-secondary);
-                }
-
-                .flight-sidebar {
-                    text-align: right;
-                    border-left: 1px solid var(--glass-border);
-                    padding-left: 2rem;
-                }
-                .price { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem; }
-                
-                .admin-btns { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
-                .icon-btn {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 8px;
-                    border: 1px solid var(--glass-border);
-                    background: transparent;
-                    color: var(--text-secondary);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                .icon-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(96, 165, 250, 0.05); }
-                .icon-btn.delete:hover { border-color: var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-
-                @media (max-width: 968px) {
-                    .flight-main { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
-                    .airline-info { justify-content: center; }
-                    .route-info { flex-direction: column; gap: 1.5rem; }
-                    .flight-sidebar { border-left: none; border-top: 1px solid var(--glass-border); padding: 1.5rem 0 0; text-align: center; }
-                    .admin-btns { justify-content: center; }
-                }
-
-                .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-                .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-                .full-width { grid-column: span 2; }
-                .form-group label { font-size: 0.85rem; color: var(--text-secondary); }
-                .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
-            `}</style>
         </div>
     );
 };

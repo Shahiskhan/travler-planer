@@ -95,13 +95,13 @@ const Locations = () => {
         }
     };
 
-    if (loading && locations.length === 0) return <div className="text-center mt-8">Loading amazing places...</div>;
+    if (loading && locations.length === 0) return <div className="text-center mt-8 text-text-secondary">Loading amazing places...</div>;
 
     return (
-        <div className="container">
-            <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0 }}>Discover Pakistan</h2>
-                <div className="flex-center" style={{ gap: '1rem' }}>
+        <div className="container mx-auto py-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <h2 className="text-4xl font-bold text-white">Discover Pakistan</h2>
+                <div className="flex items-center gap-4">
                     {isMiniAdmin && (
                         <button
                             onClick={() => setShowOnlyMine(!showOnlyMine)}
@@ -111,7 +111,7 @@ const Locations = () => {
                         </button>
                     )}
                     {isAnyAdmin && (
-                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex-center" style={{ gap: '0.5rem' }}>
+                        <button onClick={() => handleOpenModal()} className="btn btn-primary flex items-center gap-2">
                             <Plus size={20} /> Add Location
                         </button>
                     )}
@@ -120,33 +120,39 @@ const Locations = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {locations.map((loc) => (
-                    <div key={loc.id} className="glass-panel card location-card" style={{ padding: 0 }}>
-                        <div className="card-image-wrapper">
+                    <div key={loc.id} className="glass-panel overflow-hidden hover:-translate-y-2 transition-transform duration-300">
+                        <div className="relative h-64 bg-card">
                             {loc.thumbnail ? (
-                                <img src={loc.thumbnail} alt={loc.cityName} className="card-img" />
+                                <img src={loc.thumbnail} alt={loc.cityName} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="flex-center placeholder-img">
+                                <div className="flex items-center justify-center h-full text-text-secondary">
                                     <Camera size={48} />
                                 </div>
                             )}
-                            <div className="card-overlay">
-                                <h3 className="card-title">{loc.cityName}, {loc.country}</h3>
+                            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent flex items-end justify-between">
+                                <h3 className="text-2xl font-bold text-white mb-0">{loc.cityName}, {loc.country}</h3>
                                 {(isSuperAdmin || (isMiniAdmin && loc.UserId === user.id)) && (
-                                    <div className="admin-actions">
-                                        <button onClick={() => handleOpenModal(loc)} className="action-btn edit" title="Edit your work"><Edit2 size={16} /></button>
-                                        <button onClick={() => handleDelete(loc.id)} className="action-btn delete" title="Delete your work"><Trash2 size={16} /></button>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => handleOpenModal(loc)} className="p-2 rounded-full bg-primary/20 hover:bg-primary text-white backdrop-blur-sm transition-colors block" title="Edit">
+                                            <Edit2 size={16} />
+                                        </button>
+                                        <button onClick={() => handleDelete(loc.id)} className="p-2 rounded-full bg-red-500/20 hover:bg-red-500 text-white backdrop-blur-sm transition-colors block" title="Delete">
+                                            <Trash2 size={16} />
+                                        </button>
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="card-body">
-                            <p className="card-desc">{loc.description}</p>
-                            <div className="card-info">
-                                <span className="flex-center info-item">
-                                    <Calendar size={16} /> Best time: {loc.bestTimeToVisit}
+                        <div className="p-6">
+                            <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                                {loc.description}
+                            </p>
+                            <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+                                <span className="flex items-center gap-2 text-sm text-text-secondary">
+                                    <Calendar size={16} className="text-primary" /> Best time: {loc.bestTimeToVisit}
                                 </span>
-                                <span className="flex-center info-item">
-                                    <MapPin size={16} /> {loc.coordinates || 'N/A'}
+                                <span className="flex items-center gap-2 text-sm text-text-secondary">
+                                    <MapPin size={16} className="text-primary" /> {loc.coordinates || 'N/A'}
                                 </span>
                             </div>
                         </div>
@@ -155,8 +161,8 @@ const Locations = () => {
             </div>
 
             {locations.length === 0 && !loading && (
-                <div className="glass-panel empty-state">
-                    <p>No locations found. Start adding some!</p>
+                <div className="glass-panel p-16 text-center text-text-secondary">
+                    <p className="text-xl">No locations found. Start adding some!</p>
                 </div>
             )}
 
@@ -165,9 +171,9 @@ const Locations = () => {
                 onClose={() => setIsModalOpen(false)}
                 title={editingLoc ? 'Edit Location' : 'Add New Location'}
             >
-                <form onSubmit={handleSubmit} className="form-grid">
-                    <div className="form-group">
-                        <label>City Name</label>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-text-secondary">City Name</label>
                         <input
                             type="text"
                             required
@@ -176,8 +182,8 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, cityName: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Country</label>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-text-secondary">Country</label>
                         <input
                             type="text"
                             required
@@ -186,8 +192,8 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Thumbnail URL</label>
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-medium text-text-secondary">Thumbnail URL</label>
                         <input
                             type="text"
                             className="input"
@@ -195,8 +201,8 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
                         />
                     </div>
-                    <div className="form-group full-width">
-                        <label>Description</label>
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-medium text-text-secondary">Description</label>
                         <textarea
                             rows="4"
                             className="input"
@@ -204,8 +210,8 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         ></textarea>
                     </div>
-                    <div className="form-group">
-                        <label>Best Time to Visit</label>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-text-secondary">Best Time to Visit</label>
                         <input
                             type="text"
                             className="input"
@@ -213,8 +219,8 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, bestTimeToVisit: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Coordinates (Lat, Long)</label>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-text-secondary">Coordinates (Lat, Long)</label>
                         <input
                             type="text"
                             className="input"
@@ -222,7 +228,7 @@ const Locations = () => {
                             onChange={(e) => setFormData({ ...formData, coordinates: e.target.value })}
                         />
                     </div>
-                    <div className="form-actions full-width">
+                    <div className="md:col-span-2 flex justify-end gap-3 mt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-outline">Cancel</button>
                         <button type="submit" className="btn btn-primary">
                             {editingLoc ? 'Update Location' : 'Create Location'}
@@ -230,127 +236,6 @@ const Locations = () => {
                     </div>
                 </form>
             </Modal>
-
-            <style jsx>{`
-                .container { padding: 2rem 0; }
-                
-                .location-card {
-                    overflow: hidden;
-                    transition: transform 0.3s ease;
-                }
-                
-                .location-card:hover {  transform: translateY(-5px); }
-
-                .card-image-wrapper {
-                    height: 250px;
-                    position: relative;
-                    background: #1e293b;
-                }
-
-                .card-img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .placeholder-img {
-                    height: 100%;
-                    color: var(--text-secondary);
-                }
-
-                .card-overlay {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    padding: 1.5rem;
-                    background: linear-gradient(transparent, rgba(0,0,0,0.9));
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-end;
-                }
-
-                .card-title {
-                    margin: 0;
-                    color: white;
-                    font-size: 1.5rem;
-                }
-
-                .admin-actions {
-                    display: flex;
-                    gap: 0.5rem;
-                }
-
-                .action-btn {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 50%;
-                    border: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    backdrop-filter: blur(5px);
-                }
-
-                .action-btn.edit { background: rgba(59, 130, 246, 0.5); color: white; }
-                .action-btn.delete { background: rgba(239, 68, 68, 0.5); color: white; }
-                
-                .action-btn:hover { transform: scale(1.1); }
-
-                .card-body { padding: 1.5rem; }
-                
-                .card-desc {
-                    color: var(--text-secondary);
-                    font-size: 0.95rem;
-                    line-height: 1.6;
-                    margin-bottom: 1.5rem;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-
-                .card-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.75rem;
-                    border-top: 1px solid var(--glass-border);
-                    padding-top: 1rem;
-                }
-
-                .info-item {
-                    justify-content: flex-start;
-                    gap: 0.5rem;
-                    font-size: 0.85rem;
-                    color: var(--text-secondary);
-                }
-
-                .empty-state {
-                    padding: 4rem;
-                    text-align: center;
-                    color: var(--text-secondary);
-                }
-
-                .form-grid {
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 1.5rem;
-                }
-
-                .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-                .full-width { grid-column: span 2; }
-                
-                .form-group label { font-size: 0.875rem; color: var(--text-secondary); }
-                
-                .form-actions {
-                    display: flex;
-                    justify-content: flex-end;
-                    gap: 1rem;
-                    margin-top: 1rem;
-                }
-            `}</style>
         </div>
     );
 };
