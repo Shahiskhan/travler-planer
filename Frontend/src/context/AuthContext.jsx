@@ -31,10 +31,10 @@ export const AuthProvider = ({ children }) => {
             const data = await authLogin(email, password);
             setUser(data.user);
             toast.success('Login successful!');
-            return true;
+            return { success: true, user: data.user };
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed');
-            return false;
+            return { success: false, user: null };
         }
     };
 

@@ -20,7 +20,7 @@ const ViewPoints = () => {
         entryFee: 0
     });
 
-    const isSuperAdmin = user?.role === 'ADMIN';
+    const isSuperAdmin = user?.role === 'SUPER_ADMIN';
     const isMiniAdmin = user?.role === 'MINI_ADMIN';
     const isAnyAdmin = isSuperAdmin || isMiniAdmin;
 

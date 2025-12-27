@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,15 +9,17 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3b82f6',
-          hover: '#2563eb',
+          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
+          hover: 'rgb(var(--color-primary) / 0.9)',
         },
-        secondary: '#8b5cf6',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         accent: '#f43f5e',
-        dark: '#0f172a',
-        card: '#1e293b',
-        'text-primary': '#f8fafc',
-        'text-secondary': '#94a3b8',
+        // Map to CSS variables for theming with opacity support
+        dark: 'rgb(var(--bg-primary) / <alpha-value>)',
+        card: 'rgb(var(--bg-card) / <alpha-value>)',
+        'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',
+        border: 'rgb(var(--border-color) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

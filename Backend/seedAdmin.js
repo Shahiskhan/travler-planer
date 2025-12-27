@@ -17,7 +17,7 @@ const seedAdmin = async () => {
                 email: adminEmail,
                 phone: "0000000000",
                 password: hashedPassword,
-                role: "ADMIN",
+                role: "SUPER_ADMIN",
                 status: "ACTIVE"
             });
 

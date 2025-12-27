@@ -10,9 +10,16 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(formData.email, formData.password);
-        if (success) {
-            navigate('/');
+        const result = await login(formData.email, formData.password);
+        if (result.success) {
+            // Role-based redirect
+            if (result.user.role === 'SUPER_ADMIN' || result.user.role === 'ADMIN') {
+                navigate('/super-admin');
+            } else if (result.user.role === 'MINI_ADMIN') {
+                navigate('/mini-admin');
+            } else {
+                navigate('/');
+            }
         }
     };
 

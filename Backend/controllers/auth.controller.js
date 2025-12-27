@@ -15,13 +15,16 @@ exports.register = async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Prevent SUPER_ADMIN creation via public API
+        const safeRole = (role === "SUPER_ADMIN") ? "USER" : (role || "USER");
+
         // Create user
         const user = await User.create({
             name,
             email,
             phone,
             password: hashedPassword,
-            role: role || "USER"
+            role: safeRole
         });
 
         // Generate token

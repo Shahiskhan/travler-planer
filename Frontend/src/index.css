@@ -3,11 +3,41 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: 255 255 255;
+    --bg-secondary: 240 253 244;
+    --bg-card: 255 255 255;
+    --text-primary: 6 78 59;
+    --text-secondary: 71 85 105;
+    --border-color: 209 213 219;
+    --input-bg: 241 245 249;
+
+    /* Emerald 600 */
+    --color-primary: 5 150 105;
+    /* Amber 600 */
+    --color-secondary: 217 119 6;
+  }
+
+  .dark {
+    --bg-primary: 6 78 59;
+    --bg-secondary: 2 44 34;
+    --bg-card: 6 78 59;
+    --text-primary: 236 253 245;
+    --text-secondary: 167 243 208;
+    --border-color: 4 120 87;
+    --input-bg: 6 78 59;
+
+    /* Emerald 500 */
+    --color-primary: 16 185 129;
+    /* Amber 400 */
+    --color-secondary: 251 191 36;
+  }
+
   body {
-    @apply bg-dark text-text-primary min-h-screen overflow-x-hidden font-sans;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.1) 0, transparent 50%);
+    @apply bg-dark text-text-primary min-h-screen overflow-x-hidden font-sans transition-colors duration-300;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.05) 0, transparent 50%);
   }
 }
 
@@ -15,13 +45,13 @@
   .btn {
     @apply inline-flex items-center justify-center px-7 py-3 rounded-xl font-semibold transition-all duration-300 cursor-pointer border-none text-base gap-2;
   }
-  
+
   .btn-primary {
     @apply bg-gradient-to-br from-primary to-secondary text-white shadow-lg hover:-translate-y-0.5 hover:shadow-primary/40;
   }
 
   .btn-outline {
-    @apply bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20;
+    @apply border border-border text-text-primary hover:bg-black/5 dark:hover:bg-white/10 transition-colors;
   }
 
   .btn-lg {
@@ -29,10 +59,10 @@
   }
 
   .glass-panel {
-    @apply bg-card/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl;
+    @apply bg-white/70 dark:bg-card/70 backdrop-blur-xl border border-border shadow-xl rounded-2xl;
   }
 
   .input {
-    @apply w-full px-4 py-3.5 bg-dark/60 border border-white/10 rounded-xl text-white transition-all duration-300 text-sm focus:outline-none focus:border-primary focus:bg-dark/80 focus:ring-4 focus:ring-primary/15;
+    @apply w-full px-4 py-3.5 bg-gray-50 dark:bg-dark/60 border border-border rounded-xl text-text-primary transition-all duration-300 text-sm focus:outline-none focus:border-primary focus:bg-white dark:focus:bg-dark/80 focus:ring-4 focus:ring-primary/15;
   }
 }

@@ -101,7 +101,7 @@ const Register = () => {
                                 />
                                 <div className="flex flex-col">
                                     <span className="font-bold text-sm">Traveler</span>
-                                    <span className="text-xs text-text-secondary mt-1">Explore destinations & book services</span>
+                                    <span className="text-xs text-text-secondary mt-1">Explore & Book Services</span>
                                 </div>
                             </label>
 
@@ -115,8 +115,8 @@ const Register = () => {
                                     className="mt-1"
                                 />
                                 <div className="flex flex-col">
-                                    <span className="font-bold text-sm">Travel Services Partner</span>
-                                    <span className="text-xs text-text-secondary mt-1">Manage hotels, flights & attractions</span>
+                                    <span className="font-bold text-sm">Travel Service Provider</span>
+                                    <span className="text-xs text-text-secondary mt-1">Manage Your Services</span>
                                 </div>
                             </label>
                         </div>
